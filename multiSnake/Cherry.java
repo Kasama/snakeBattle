@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package multiSnake;
 
 import java.awt.Point;
@@ -11,7 +6,7 @@ import java.util.Random;
 public class Cherry {
     public Random random = new Random();
     private int type = 0;//MultiSnake.random.nextInt(3);
-    private Point location = new Point(random.nextInt(MultiSnake.screenDim.width/MultiSnake.scale-1),random.nextInt(MultiSnake.screenDim.height/MultiSnake.scale-1));
+    private Point location = new Point(random.nextInt(MultiSnake.screenDim.width/MultiSnake.scale)-1,random.nextInt(MultiSnake.screenDim.height/MultiSnake.scale)-1);
     public void Cherry(){
         
     }
@@ -55,7 +50,7 @@ public class Cherry {
     }
     
     public void setNewLocation(){
-        this.location = new Point(MultiSnake.random.nextInt(MultiSnake.screenDim.width/MultiSnake.scale-1),MultiSnake.random.nextInt(MultiSnake.screenDim.height/MultiSnake.scale-1));//191,107
+        this.location = new Point(MultiSnake.random.nextInt(MultiSnake.screenDim.width/MultiSnake.scale)-1,MultiSnake.random.nextInt(MultiSnake.screenDim.height/MultiSnake.scale)-1);//191,107
     }
     
     public void setNewType(){

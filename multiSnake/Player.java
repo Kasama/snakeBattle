@@ -5,7 +5,13 @@
  */
 package multiSnake;
 
+import java.awt.Color;
 import java.awt.Point;
+import static java.lang.Math.abs;
+import static java.lang.Math.acos;
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
+import static java.lang.Math.tan;
 import java.util.ArrayList;
 
 /**
@@ -25,33 +31,56 @@ public class Player {
     private int stamina = 0;
     private boolean isShiftPressed = false;
     private int hasLasers = 10;
-    private boolean hasBomb = true;
+    private boolean hasBomb;
     private Point bombLocation;
     private boolean bombOnMap;
-    private int bombColor;
-
-    public int getBombColor() {
-        return bombColor;
-    }
+    private Color bombColor;
+    private int bombColorBrightness;
+    private boolean colorState;
     
-    public void increaseBombColor(){
-        this.bombColor++;
-    }
-
-    public void setBombColor(int bombColor) {
-        this.bombColor = bombColor;
-    }
-    public void setHasBomb(boolean hasBomb) {
-        this.hasBomb = hasBomb;
-    }
-
     public void player() {
         this.direction = 0;
         this.score = 0;
         this.head = head;
         this.snakeParts = snakeParts;
         this.ticksOnDirection = 0;
+        this.colorState = true;
+        this.hasBomb = false;
     }
+    
+    public Color getBombColor() {
+        return bombColor;
+    }
+    
+    public void dynamizeBombColorBrightness(){
+        int r = bombColor.getRed();
+        int g = bombColor.getGreen();
+        int b = bombColor.getBlue();
+        /*System.out.println(r+" "+g+" "+b);
+        if(r ==255 || g == 255 || b == 255){
+            colorState = true;
+        }
+        if(r == 0 || g == 0 || b == 0){
+            colorState = false;
+        }
+        if(colorState){
+            this.setBombColor(new Color(r-1,g-1,b-1));
+        }else{
+            this.setBombColor(new Color(r+1,g+1,b+1));
+        }
+        System.out.println(r+" "+g+" "+b);*/
+        //this.setBombColor(new Color((int)abs(sin(ticks)*255),(int)abs(cos(ticks)*255),(int)abs(sin(cos(ticks)*255))));
+        this.setBombColor(new Color(MultiSnake.random.nextInt(255),MultiSnake.random.nextInt(255),MultiSnake.random.nextInt(255)));
+        
+    }
+    
+    public void setBombColor(Color bombColor) {
+        this.bombColor = bombColor;
+    }
+    public void setHasBomb(boolean hasBomb) {
+        this.hasBomb = hasBomb;
+    }
+
 
     public int getStamina() {
         return stamina;
@@ -93,7 +122,7 @@ public class Player {
 
     public void run() {
         if (this.getStamina() > 0) {
-            if (this.getDirection() == 0 && this.getTicks() % 4 == 0) {//WIP
+            if (this.getDirection() == 0 && this.getTicks() % 4 == 0) {
                 this.setHead(new Point(this.getHead().x, this.getHead().y - 1));
                 for (int j = 0; j < this.accessSnakeParts().size(); j++) {
                     this.accessSnakeParts().set(j, new Point(this.accessSnakeParts().get(j).x, this.accessSnakeParts().get(j).y - 1));
