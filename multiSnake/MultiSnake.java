@@ -5,6 +5,7 @@
  */
 package multiSnake;
 
+import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Frame;
@@ -73,20 +74,22 @@ public class MultiSnake implements ActionListener, KeyListener {
     public void spawnSnakes() {//sets direction and head location of each snake
         player1.setHead(new Point((screenDim.width / scale - 1) / 2, (screenDim.height / scale - 1) / 2));//48,45
         player2.setHead(new Point((screenDim.width / scale - 1) / 2 + 1, (screenDim.height / scale - 1) / 2));//48,45
-        player1.setTailLength(7);
-        player2.setTailLength(7);
+        player1.setTailLength(10);
+        player2.setTailLength(10);
         player1.setTicks(0);
         player2.setTicks(0);
         player1.setDirection(0);
         player2.setDirection(0);
         player1.ClearSnakeParts();
         player2.ClearSnakeParts();
-        player1.setStamina(75);
-        player2.setStamina(75);
-        player1.setBombColor(0);
-        player2.setBombColor(2);
-        player1.setBombOnMap(false);
-        player2.setBombOnMap(false);
+        player1.setStamina(750);
+        player2.setStamina(750);
+        player1.setBombColor(RenderPanel.newOrange);
+        player2.setBombColor(Color.RED);
+//        player1.setBombOnMap(false);
+//        player2.setBombOnMap(false);
+        player1.setTeleport(false);
+        player2.setTeleport(false);
     }
     
     public void spawnCherry() {//head meets cherry
@@ -102,7 +105,7 @@ public class MultiSnake implements ActionListener, KeyListener {
             player1.increaseStamina(50);
             createCherry();
         }
-        if (player2.getHead().equals(cherry.getLocation())) {//inverted increasing tailLength
+        if (player2.getHead().equals(cherry.getLocation())) {
             if (cherry.getType() == 1) {
                 player2.setTeleport(true);
             }
@@ -130,11 +133,9 @@ public class MultiSnake implements ActionListener, KeyListener {
         player2.increaseTicks(7);
         if (player1.getTicks() % gameSpeed == 0 && player1.getHead() != null && player2.getHead() != null && over == 0 && !paused) {
             player1.accessSnakeParts().add(player1.getHead());
-            if(player1.getHead().equals(player1.getBombLocation()) || player1.getHead().equals(player2.getBombLocation())){
+            if(player1.getHead().equals(player2.getBombLocation())){
                 player1.decreaseStamina(50);
-            }
-            if(player2.getHead().equals(player1.getBombLocation()) || player2.getHead().equals(player2.getBombLocation())){
-                player2.decreaseStamina(50);
+                player2.setBombOnMap(false);
             }
             if(player1.getIsShiftPressed())
                 player1.run();
@@ -155,6 +156,14 @@ public class MultiSnake implements ActionListener, KeyListener {
         }
         if (player2.getTicks() % gameSpeed == 0 && player1.getHead() != null && player2.getHead() != null && over == 0 && !paused) {
             player2.accessSnakeParts().add(player2.getHead());
+            if(player2.getHead().equals(player1.getBombLocation())){
+                player2.decreaseStamina(50);
+                player1.setBombOnMap(false);
+            }
+            if(player2.getHead().equals(player1.getBombLocation()) || player2.getHead().equals(player2.getBombLocation())){
+                player2.decreaseStamina(50);
+                player2.setBombOnMap(false);
+            }
             if(player2.getIsShiftPressed())
                 player2.run();
             if (player2.getDirection() == 0 && checkInsideOfBound() == 0 && noTailAt(player2.getHead().x, player2.getHead().y - 1)) {//PLAYER 2
@@ -219,7 +228,6 @@ public class MultiSnake implements ActionListener, KeyListener {
         switch (i) {
             case KeyEvent.VK_UP:
                 player2.moveSnake(0);
-                
                 break;
             case KeyEvent.VK_DOWN:
                 player2.moveSnake(1);
@@ -259,10 +267,10 @@ public class MultiSnake implements ActionListener, KeyListener {
                 break;
             case KeyEvent.VK_SHIFT:
                 if (2 == keyLocation) {
-                    player1.setIsShiftPressed(true);
+                    player1.run();
                 }
                 if (3 == keyLocation) {
-                    player2.setIsShiftPressed(true);
+                    player2.run();
                 }
                 break;
             case KeyEvent.VK_1:
@@ -292,7 +300,7 @@ public class MultiSnake implements ActionListener, KeyListener {
     public void keyReleased(KeyEvent e) {
         int i = e.getKeyCode();
         int keyLocation = e.getKeyLocation();
-        if (i == KeyEvent.VK_SHIFT) {
+         if (i == KeyEvent.VK_SHIFT) {
             if(keyLocation == 2)
                 player1.setIsShiftPressed(false);
             if(keyLocation == 3)
